@@ -1,0 +1,107 @@
+protocol: causalarena_master_scm_20260902
+
+scm:
+  d_x: 50
+  n_context: 1024
+  n_query: 100
+  calibration_population: 50000
+  world_seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]
+  cate_mean: 0.5
+  cate_sd: 0.5
+  treatment_logit_scale: 0.55
+  alpha_u: 0.75
+  alpha_i: 1.5
+  gamma_u: 0.8
+  mediator_delta: 1.0
+  mediator_noise_sd: 0.75
+  outcome_noise_sd: 0.75
+  proxy_lambda_z: 2.0
+  proxy_lambda_w: 2.0
+  proxy_x_scale: 0.2
+  hidden_severity_kappa: 1.0
+
+outcome_confounding_modulation:
+  x_scale: 0.75
+  active_features: 10
+
+evaluation:
+  bootstrap_replicates: 10000
+  bootstrap_seed: 20260902
+
+# Checkpoints are not redistributed. Each source below is an official repository
+# maintained by the original model authors. Paths are relative to this repo.
+checkpoints:
+  causalpfn:
+    path: checkpoints/causalpfn/causalpfn_v0.pt
+    source_repo: https://github.com/vdblm/CausalPFN
+    source: https://huggingface.co/vdblm/causalpfn/blob/ccfc5083f28270d09356b8c35190073df17798d5/causalpfn_v0.pt
+    revision: ccfc5083f28270d09356b8c35190073df17798d5
+    sha256: 4f0f53717f1c62426fe98faa0459d33bc8f9862a87e8484ca3869ca899e7841d
+  dopfn:
+    path: checkpoints/dopfn/model_submitit_0ccc_id_171b69db_epoch_-1.cpkt
+    source_repo: https://github.com/jr2021/Do-PFN
+    source: https://github.com/jr2021/Do-PFN/blob/9887565273fa37e3761abfb2ba2550117eb5320d/artifacts/model_submitit_0ccc_id_171b69db_epoch_-1.cpkt
+    revision: 9887565273fa37e3761abfb2ba2550117eb5320d
+    sha256: 630480c82e33fcada67666833b532f4483987c804124a685d3b20c77a5d45d03
+  causalfm_standard:
+    path: checkpoints/causalfm/standard/best_model.pth
+    source_repo: https://github.com/yccm/CausalFM
+    source: https://github.com/yccm/CausalFM-toolkit/blob/bb74ef729c70d274fe2bb422c3b0edff4754fa37/checkpoints_standard/best_model.pth
+    revision: bb74ef729c70d274fe2bb422c3b0edff4754fa37
+    sha256: 9b75ebf02016a61b3a6e8fc075f52f9c56189ea5d7e7633137a5c9b70f25774e
+  causalfm_fd:
+    path: checkpoints/causalfm/frontdoor/best_model.pth
+    source_repo: https://github.com/yccm/CausalFM
+    source: https://github.com/yccm/CausalFM-toolkit/blob/bb74ef729c70d274fe2bb422c3b0edff4754fa37/checkpoints_FD/best_model.pth
+    revision: bb74ef729c70d274fe2bb422c3b0edff4754fa37
+    sha256: 16a8ae0cbf1e6817ff88c3b32ed786fd29975fcdfd28329e415e915db37d8236
+  causalfm_iv_binary:
+    path: checkpoints/causalfm/iv_binary/best_model.pth
+    source_repo: https://github.com/yccm/CausalFM
+    source: https://github.com/yccm/CausalFM-toolkit/blob/bb74ef729c70d274fe2bb422c3b0edff4754fa37/checkpoints_IV_binary/best_model.pth
+    revision: bb74ef729c70d274fe2bb422c3b0edff4754fa37
+    sha256: bf0b2d87a55f695c0f12200c410e1ec5675686d0b3f2c4a9a0f032d86ba8eca0
+  tabpfn_v3_classifier:
+    path: checkpoints/tabpfn_v3/tabpfn-v3-classifier-v3_default.ckpt
+    source_repo: https://github.com/PriorLabs/TabPFN
+    source: https://huggingface.co/Prior-Labs/tabpfn_3/blob/24a16a89d245878b846555110985634aa2e656d7/tabpfn-v3-classifier-v3_default.ckpt
+    revision: 24a16a89d245878b846555110985634aa2e656d7
+    sha256: d0d865d54dfbc524f5703104be90620182dca7e5fb2c16de72e9959ea18f3988
+    gated: true
+  tabpfn_v3_regressor:
+    path: checkpoints/tabpfn_v3/tabpfn-v3-regressor-v3_default.ckpt
+    source_repo: https://github.com/PriorLabs/TabPFN
+    source: https://huggingface.co/Prior-Labs/tabpfn_3/blob/24a16a89d245878b846555110985634aa2e656d7/tabpfn-v3-regressor-v3_default.ckpt
+    revision: 24a16a89d245878b846555110985634aa2e656d7
+    sha256: 311ce18d97e9533d8585eaadafe040fbdd8070533209ed8696641dadc97a7301
+    gated: true
+
+panels:
+  BD:
+    - [causalpfn, CausalPFN]
+    - [dopfn, Do-PFN]
+    - [causalfm, CausalFM]
+    - [tabpfn_x, TabPFN-v3 + X-Learner]
+    - [xgb_x, XGBoost + X-Learner]
+    - [dr_learner, Cross-fitted DR-Learner]
+  FD:
+    - [causalpfn_fd_xonly, "CausalPFN [X-only]"]
+    - [dopfn_fd_xonly, "Do-PFN [X-only]"]
+    - [causalfm, CausalFM]
+    - [tabpfn_fd, TabPFN + FD Plug-in]
+    - [fd_nn, NN + FD Plug-in]
+    - [fd_xgboost, XGBoost + FD Plug-in]
+  IV:
+    - [causalpfn, CausalPFN]
+    - [dopfn, Do-PFN]
+    - [causalfm, CausalFM]
+    - [wald_tabpfn, TabPFN-v3 + Wald]
+    - [forestdriv, ForestDRIV]
+    - [kiv, KIV]
+  PROX:
+    - [causalpfn, CausalPFN]
+    - [dopfn, Do-PFN]
+    - [causalfm, CausalFM]
+    - [p_learner, ExtraTrees + P-Learner]
+    - [p_learner_tabpfn_v3_final, TabPFN-v3 + P-Learner]
+    - [p_learner_xgb_final, XGBoost + P-Learner]

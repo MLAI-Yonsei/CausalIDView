@@ -1,7 +1,10 @@
 __pycache__/
 *.py[cod]
 .venv/
+.pytest_cache/
+artifacts/
+checkpoints/
 figures/*
-!figures/hidden_confounder_track.pdf
-!figures/hidden_confounder_track.png
-!figures/hidden_confounder_track.jpg
+!figures/fig2.pdf
+results/*
+!results/fig2.csv
