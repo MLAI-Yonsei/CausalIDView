@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproduce the two CausalIDView paper figures from bundled evaluation data."""
+"""Reproduce the three CausalIDView paper figures from bundled evaluation data."""
 
 from __future__ import annotations
 
@@ -20,6 +20,8 @@ from matplotlib.patches import Patch
 from matplotlib.ticker import MaxNLocator
 import numpy as np
 import pandas as pd
+
+from hidden_confounder import render_hidden_confounder, verify_hidden_confounder
 
 
 ROOT = Path(__file__).resolve().parent
@@ -399,12 +401,23 @@ def verify_sources() -> None:
         observed = float(aggregate.loc[model, "tracking_error_pct"])
         if not np.isclose(observed, expected, atol=1e-12, rtol=1e-12):
             raise ValueError(f"FD tracking-error check failed for {model}")
-    print("PASS: source checksums, 24×40 Figure 2 cells, and FD response metrics verified")
+    verify_hidden_confounder(
+        DATA / "hidden_confounder_track_plot_data.csv",
+        manifest["numeric_checks"]["hidden_confounder_panel_means"],
+    )
+    print(
+        "PASS: source checksums, 24×40 Figure 2 cells, FD response metrics, "
+        "and hidden-confounder panel contracts verified"
+    )
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--figure", choices=("all", "figure2", "fd-response"), default="all")
+    parser.add_argument(
+        "--figure",
+        choices=("all", "figure2", "hidden-confounder", "fd-response"),
+        default="all",
+    )
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--verify-only", action="store_true")
     return parser.parse_args()
@@ -417,6 +430,10 @@ def main() -> int:
         return 0
     if args.figure in {"all", "figure2"}:
         render_figure2(args.output)
+    if args.figure in {"all", "hidden-confounder"}:
+        render_hidden_confounder(
+            DATA / "hidden_confounder_track_plot_data.csv", args.output
+        )
     if args.figure in {"all", "fd-response"}:
         render_fd_structural_response(args.output)
     print(f"Wrote reproducible outputs to {args.output.resolve()}")

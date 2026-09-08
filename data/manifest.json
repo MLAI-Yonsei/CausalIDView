@@ -1,9 +1,11 @@
 {
   "schema_version": 1,
-  "description": "Minimal immutable evaluation data required to reproduce the two CausalIDView figures.",
+  "description": "Minimal immutable evaluation data required to reproduce the three CausalIDView figures.",
   "sha256": {
     "figure2_world_metrics.csv": "d16cd9ca81c1274e7e1edd820f0112c04bd08134c84945736ba9d2f72cae64ad",
-    "fd_structural_response.npz": "b1b254cb82e446f1f84673d49c4dc09c30e21303a4fc1dfeb9d9c30a9c42aad6"
+    "fd_structural_response.npz": "b1b254cb82e446f1f84673d49c4dc09c30e21303a4fc1dfeb9d9c30a9c42aad6",
+    "hidden_confounder_track_plot_data.csv": "ad5c7a3f627ba9ce16b7fce8a86770ddd64de207b8b8789b8bcea09c8c5f39d1",
+    "hidden_confounder_track_manifest.json": "f13b68362e7bc95064f332453eb411e0e374b51720040db5ef023f38eed1d4bd"
   },
   "numeric_checks": {
     "figure2_mean_spehe_sq": {
@@ -35,6 +37,11 @@
     "fd_tracking_error_pct": {
       "causalfm_fd": 101.63628865350947,
       "tabpfn_fd": 38.27259698006037
+    },
+    "hidden_confounder_panel_means": {
+      "(a)/causalpfn": 0.8495,
+      "(a)/causalfm": 0.731,
+      "(d)/csa_pfn_msm": 0.8265897663017624
     }
   },
   "provenance": {
@@ -42,6 +49,8 @@
     "figure2_contract": "24 selected model-regime cells, 40 worlds per cell; world-level arithmetic means and 10000-replicate bootstrap intervals",
     "fd_response_source": "MasterSCM/ablation_runs/structural_response_v1/predictions.parquet",
     "fd_response_contract": "FD original and causal_x2 query predictions for CausalFM-FD and TabPFN + FD plug-in; 40 worlds and 100 aligned queries per world",
+    "hidden_confounder_source": "figures/main_fig/hidden_confounder_track_plot_data.csv",
+    "hidden_confounder_contract": "376 final plot observations: oracle-set inclusion and sensitivity bounds over 40 MasterSCM worlds, paired BD/HC aggregates over 40 worlds, and paired IHDP/IHDP-HC aggregates over 100 realizations",
     "extraction_date_utc": "2026-09-06",
     "world_count": 40,
     "query_count_per_world": 100

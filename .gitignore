@@ -1,4 +1,7 @@
 __pycache__/
 *.py[cod]
 .venv/
-figures/
+figures/*
+!figures/hidden_confounder_track.pdf
+!figures/hidden_confounder_track.png
+!figures/hidden_confounder_track.jpg
