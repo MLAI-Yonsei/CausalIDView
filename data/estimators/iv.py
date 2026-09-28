@@ -3,7 +3,7 @@
 from data.views import observational_view
 
 
-MODELS = ("causalpfn", "dopfn", "causalfm", "wald_tabpfn", "forestdriv", "kiv")
+MODELS = ("causalpfn", "dopfn", "causalfm", "forestdriv", "kiv", "wald_tabpfn")
 
 
 def inputs(world):

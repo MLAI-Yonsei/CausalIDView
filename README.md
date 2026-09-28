@@ -56,6 +56,15 @@ created with:
 python scripts/plot_fig2.py --png figures/fig2.png
 ```
 
+The frozen snapshot contains the current six-method selection in each panel:
+
+| Panel | Methods after the three causal foundation models |
+|---|---|
+| Back-door | TabPFN-v3.5 X-, S-, and DR-Learners |
+| Front-door | NN, XGBoost, and TabPFN-v3.5 FD plug-ins |
+| Instrumental variable | ForestDRIV, KIV, and TabPFN-v3.5 + Wald |
+| Proximal | ExtraTrees, NN, and TabPFN-v3.5 P-Learners |
+
 ## Full evaluation
 
 Generate the 40 deterministic paired worlds:
@@ -87,7 +96,7 @@ ATE-error² and centered-sPEHE². Uncertainty is calculated with a fixed
 ## Foundation-model provenance
 
 Foundation-model source trees and weights are not redistributed. Their upstream
-licenses and execution environments differ, and TabPFN-v3 access is gated. The
+licenses and execution environments differ, and TabPFN-v3.5 access is gated. The
 exact revision, filename, repository-relative destination, and expected SHA-256
 for every checkpoint are recorded in `configs/fig2.yaml`.
 
@@ -96,11 +105,12 @@ for every checkpoint are recorded in `configs/fig2.yaml`.
 | CausalPFN | [vdblm/CausalPFN](https://github.com/vdblm/CausalPFN) | [`causalpfn_v0.pt`](https://huggingface.co/vdblm/causalpfn/blob/ccfc5083f28270d09356b8c35190073df17798d5/causalpfn_v0.pt) |
 | Do-PFN | [jr2021/Do-PFN](https://github.com/jr2021/Do-PFN) | [author-provided checkpoint](https://github.com/jr2021/Do-PFN/blob/9887565273fa37e3761abfb2ba2550117eb5320d/artifacts/model_submitit_0ccc_id_171b69db_epoch_-1.cpkt) |
 | CausalFM | [yccm/CausalFM](https://github.com/yccm/CausalFM) | [official toolkit checkpoints](https://github.com/yccm/CausalFM-toolkit/tree/bb74ef729c70d274fe2bb422c3b0edff4754fa37) |
-| TabPFN-v3 | [PriorLabs/TabPFN](https://github.com/PriorLabs/TabPFN) | [official gated model repository](https://huggingface.co/Prior-Labs/tabpfn_3/tree/24a16a89d245878b846555110985634aa2e656d7) |
+| TabPFN-v3.5 | [PriorLabs/TabPFN](https://github.com/PriorLabs/TabPFN) | [`tabpfn-v3.5-20260909.safetensors`](https://huggingface.co/Prior-Labs/tabpfn_3_5/blob/06bf2ba35c80a92a3b9abb436b99cf49e7a0365e/tabpfn-v3.5-20260909.safetensors) |
 
 For Do-PFN, the upstream artifact is named with `epoch_-1`; the available
 upstream metadata does not establish that it is a validation-selected “best”
-checkpoint, so no such claim is made here. TabPFN-v3 requires acceptance of its
+checkpoint, so no such claim is made here. The TabPFN-v3.5 classifier and
+regressor use the same official checkpoint. Access requires acceptance of its
 official license and Hugging Face authentication.
 
 Downloaded checkpoints can be validated before evaluation:

@@ -23,14 +23,14 @@ REGIMES = ("BD", "FD", "IV", "PROX")
 TITLES = {"BD": "Back-Door", "FD": "Front-Door", "IV": "Instrumental Variable", "PROX": "Proximal"}
 LABELS = {
     "causalpfn": "CausalPFN", "dopfn": "Do-PFN", "causalfm": "CausalFM",
-    "tabpfn_x": "TabPFN-v3\n+ X-Learner", "xgb_x": "XGBoost\n+ X-Learner",
-    "dr_learner": "Cross-fitted DR-\nLearner", "causalpfn_fd_xonly": "CausalPFN\n[X-only]",
-    "dopfn_fd_xonly": "Do-PFN\n[X-only]", "tabpfn_fd": "TabPFN\n+ FD Plug-in",
+    "tabpfn_x": "TabPFN-v3.5\n+ X-Learner", "tabpfn_s": "TabPFN-v3.5\n+ S-Learner",
+    "tabpfn_dr": "TabPFN-v3.5\n+ DR-Learner", "causalpfn_fd_xonly": "CausalPFN",
+    "dopfn_fd_xonly": "Do-PFN", "tabpfn_fd": "TabPFN-v3.5\n+ FD Plug-in",
     "fd_nn": "NN\n+ FD Plug-in", "fd_xgboost": "XGBoost\n+ FD Plug-in",
-    "wald_tabpfn": "TabPFN-v3\n+ Wald", "forestdriv": "ForestDRIV", "kiv": "KIV",
+    "wald_tabpfn": "TabPFN-v3.5\n+ Wald", "forestdriv": "ForestDRIV", "kiv": "KIV",
     "p_learner": "ExtraTrees\n+ P-Learner",
-    "p_learner_tabpfn_v3_final": "TabPFN-v3\n+ P-Learner",
-    "p_learner_xgb_final": "XGBoost\n+ P-Learner",
+    "p_learner_nn_full": "NN\n+ P-Learner",
+    "p_learner_tabpfn_v3_full": "TabPFN-v3.5\n+ P-Learner",
 }
 INK, ATE, CENTERED, EDGE = "#23303A", "#1261F0", "#8ACBFF", "#4F5A62"
 GRID, BEST, SPINE = "#DCE0E3", "#F3EEE3", "#92999E"
