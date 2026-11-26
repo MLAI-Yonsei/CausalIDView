@@ -4,6 +4,8 @@ __pycache__/
 .pytest_cache/
 artifacts/
 /lightning_logs/
+/.r_libs/
+/.r_env/
 checkpoints/
 figures/*
 !figures/fig2.pdf

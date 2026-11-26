@@ -15,12 +15,35 @@ REFERENCE = ROOT / "results" / "table2" / "table2.csv"
 SCORE_FILES = ("rct_null_results.csv", "requested_baseline_results.csv")
 
 
+@pytest.mark.parametrize("model", ("causal_tree", "tarnet", "grf", "cfrnet"))
+def test_table2_predictor_accepts_traditional_models(tmp_path, model):
+    completed = subprocess.run(
+        [sys.executable, str(PREDICT), "--raw-dir", str(tmp_path), "--dataset", "actg175",
+         "--realization", "0", "--model", model, "--prepare-only"],
+        capture_output=True, text=True,
+    )
+    assert completed.returncode == 1
+    assert "ACTG175.txt" in completed.stderr
+
+
+def test_traditional_seed_schedule_matches_all_archived_primary_splits():
+    from baselines.table2 import R_MODELS, optimization_seeds
+
+    archived = pd.read_csv(DATA / "requested_baseline_results.csv").query("protocol == 'primary'")
+    assert len(archived) == 480
+    for row in archived.itertuples():
+        expected = (row.seed,) if row.model in R_MODELS else (row.seed, row.seed + 1009, row.seed + 2018)
+        assert optimization_seeds(row.model, row.realization) == expected
+
+
 @pytest.fixture
 def isolated_table(tmp_path):
     script_dir = tmp_path / SCRIPT.parent.relative_to(ROOT)
     script_dir.mkdir(parents=True)
     for script in (SCRIPT, PREDICT):
         copy(script, script_dir)
+    package = Path("Baselines/src/baselines")
+    copytree(ROOT / package, tmp_path / package, ignore=ignore_patterns("__pycache__"))
     copytree(DATA, tmp_path / "data" / "table2", ignore=ignore_patterns(*SCORE_FILES))
     reference = tmp_path / REFERENCE.relative_to(ROOT)
     reference.parent.mkdir(parents=True)
