@@ -1,0 +1,6 @@
+-r tabpfn.txt
+pytorch-lightning==2.6.5
+torchmetrics==1.8.2
+lightning-utilities==0.15.2
+pyro-ppl==1.9.1
+sklearn-quantile==0.1.1

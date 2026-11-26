@@ -1,0 +1,17 @@
+{
+  "protocol": "40 paired worlds with 100 matched queries per world and original, stay, and move outcome conditions",
+  "ground_truth": {
+    "query_manifest": "../fig2_world_manifest.json",
+    "cate_multipliers": {"original": 1, "stay": 1, "move": 2}
+  },
+  "metrics": ["E_stay", "E_move"],
+  "reference_source": "causalidview_39_reproduce/reference/fig3",
+  "reference_predictions": "2743 retained archived jobs, 17 missing-job reruns, and all 120 reruns for NN + P-Learner",
+  "n_jobs": 2880,
+  "atol": 1e-10,
+  "rtol": 1e-10,
+  "sha256": {
+    "fig3_world_metrics.csv": "ff6e0e5790ba6642cfa76ce6f042180c1635964421f036e546c69a705e48bf78",
+    "fig3.csv": "752bf66f9e4ec996377e802a3e70cd8e1d9a616dd19e6451168ba31d088637d1"
+  }
+}

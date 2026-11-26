@@ -1,0 +1,48 @@
+{
+  "archive": "Complete CausalIDView-39 reproduction release",
+  "protocol": "primary",
+  "realizations": 40,
+  "query_rows": 256,
+  "primary_splits": {
+    "source": "Primary split hashes shared by all ten models in the two archived metric CSVs",
+    "sha256": "079b1dd5fdf2f25f2699b6350d0278a5b5a023345ac5d81bfe4da7eb51fd9325"
+  },
+  "archived_files": {
+    "data/table2/rct_null_results.csv": {
+      "source": "inputs/MasterSCM/real_world_null/outputs/rct_null_results.csv",
+      "sha256": "b913c1aaecb89b8cc2e677f0e278d4e8f03b1a8258ed5cb63a7eb516ee2ea92f"
+    },
+    "data/table2/requested_baseline_results.csv": {
+      "source": "inputs/MasterSCM/real_world_null/outputs/requested_baseline_results.csv",
+      "sha256": "b5c29eac2775481fc4283caa401535b4f67a578bdc4267e650746ba0c7e3473a"
+    },
+    "results/table2/table2.csv": {
+      "source": "reference/table2/table2.csv",
+      "sha256": "433590c4f06734e53b4738657b0bc50b2299bf33ec85c86d80e4a8d5dcc7a16a"
+    }
+  },
+  "raw_inputs": {
+    "actg175": {
+      "filename": "ACTG175.txt",
+      "source": "https://github.com/mjuraska/speff2trial/blob/master/data/ACTG175.txt",
+      "bytes": 171221,
+      "sha256": "fdf211eafb4a3a14e0a43ecef3a96e97d498758ffbfc313e47184b4f451aae53"
+    },
+    "pennsylvania": {
+      "filename": "Recsfile.dta",
+      "source": "https://www.upjohn.org/data-tools/employment-research-data-center/pennsylvania-reemployment-bonus-demonstration",
+      "archive": "https://www.upjohn.org/sites/default/files/2019-02/PA_ReempBonus.zip",
+      "member": "cd/data/Upjohn Institute Created files/Recsfile.dta",
+      "bytes": 12718585,
+      "sha256": "9b94e2c826313977cd13e70c05497372683a7cb1c3b8bac47b77a358fd142fac"
+    },
+    "illinois": {
+      "filename": "illinois.dta",
+      "source": "https://www.upjohn.org/data-tools/employment-research-data-center/illinois-unemployment-incentive-experiments",
+      "archive": "https://www.upjohn.org/sites/default/files/2019-04/il_ui_experiment_data-images-install.zip",
+      "member": "data/illinois.dta",
+      "bytes": 2377496,
+      "sha256": "090a401b9c4b8a0bd77aca88401046a8f760971d3a51080b8359513a3c77952a"
+    }
+  }
+}

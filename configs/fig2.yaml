@@ -32,37 +32,46 @@ evaluation:
 # maintained by the original model authors. Paths are relative to this repo.
 checkpoints:
   causalpfn:
-    path: checkpoints/causalpfn/causalpfn_v0.pt
+    path: Baselines/CFMs/CausalPFN/causalpfn_v0.pt
     source_repo: https://github.com/vdblm/CausalPFN
     source: https://huggingface.co/vdblm/causalpfn/blob/ccfc5083f28270d09356b8c35190073df17798d5/causalpfn_v0.pt
     revision: ccfc5083f28270d09356b8c35190073df17798d5
     sha256: 4f0f53717f1c62426fe98faa0459d33bc8f9862a87e8484ca3869ca899e7841d
   dopfn:
-    path: checkpoints/dopfn/model_submitit_0ccc_id_171b69db_epoch_-1.cpkt
+    path: Baselines/CFMs/Do-PFN-fig2/artifacts/model_submitit_0ccc_id_171b69db_epoch_-1.cpkt
     source_repo: https://github.com/jr2021/Do-PFN
+    source_revision: 90d67433b43c4d52d752dc336070f525ff856e0b
+    source_manifest: requirements/dopfn-fig2-source.json
     source: https://github.com/jr2021/Do-PFN/blob/9887565273fa37e3761abfb2ba2550117eb5320d/artifacts/model_submitit_0ccc_id_171b69db_epoch_-1.cpkt
     revision: 9887565273fa37e3761abfb2ba2550117eb5320d
     sha256: 630480c82e33fcada67666833b532f4483987c804124a685d3b20c77a5d45d03
+    runtime_files:
+      - path: Baselines/CFMs/Do-PFN-fig2/artifacts/dopfn_model.pkl
+        bytes: 29396282
+        sha256: 6e05434bedcbec8c7a8729fa3ccb42e0a37788e2d055bd9c6879f6ef2ae36e2b
+      - path: Baselines/CFMs/Do-PFN-fig2/artifacts/dopfn_config.pkl
+        bytes: 955
+        sha256: e8607e55bda3251289ea041c3277d50f6fa36f6183b92ad17fa4218cac851ed3
   causalfm_standard:
-    path: checkpoints/causalfm/standard/best_model.pth
+    path: Baselines/CFMs/CausalFM/checkpoints_standard/best_model.pth
     source_repo: https://github.com/yccm/CausalFM
-    source: https://github.com/yccm/CausalFM-toolkit/blob/bb74ef729c70d274fe2bb422c3b0edff4754fa37/checkpoints_standard/best_model.pth
+    source: https://github.com/yccm/CausalFM-toolkit/blob/bb74ef729c70d274fe2bb422c3b0edff4754fa37/checkpoints/checkpoints_standard/best_model.pth
     revision: bb74ef729c70d274fe2bb422c3b0edff4754fa37
     sha256: 9b75ebf02016a61b3a6e8fc075f52f9c56189ea5d7e7633137a5c9b70f25774e
   causalfm_fd:
-    path: checkpoints/causalfm/frontdoor/best_model.pth
+    path: Baselines/CFMs/CausalFM/checkpoints_FD/best_model.pth
     source_repo: https://github.com/yccm/CausalFM
-    source: https://github.com/yccm/CausalFM-toolkit/blob/bb74ef729c70d274fe2bb422c3b0edff4754fa37/checkpoints_FD/best_model.pth
+    source: https://github.com/yccm/CausalFM-toolkit/blob/bb74ef729c70d274fe2bb422c3b0edff4754fa37/checkpoints/checkpoints_FD/best_model.pth
     revision: bb74ef729c70d274fe2bb422c3b0edff4754fa37
     sha256: 16a8ae0cbf1e6817ff88c3b32ed786fd29975fcdfd28329e415e915db37d8236
   causalfm_iv_binary:
-    path: checkpoints/causalfm/iv_binary/best_model.pth
+    path: Baselines/CFMs/CausalFM/checkpoints_IV_binary/best_model.pth
     source_repo: https://github.com/yccm/CausalFM
-    source: https://github.com/yccm/CausalFM-toolkit/blob/bb74ef729c70d274fe2bb422c3b0edff4754fa37/checkpoints_IV_binary/best_model.pth
+    source: https://github.com/yccm/CausalFM-toolkit/blob/bb74ef729c70d274fe2bb422c3b0edff4754fa37/checkpoints/checkpoints_IV_binary/best_model.pth
     revision: bb74ef729c70d274fe2bb422c3b0edff4754fa37
     sha256: bf0b2d87a55f695c0f12200c410e1ec5675686d0b3f2c4a9a0f032d86ba8eca0
   tabpfn_v35:
-    path: checkpoints/tabpfn_v35/tabpfn-v3.5-20260909.safetensors
+    path: Baselines/TabPFN/tabpfn_3_5_weights/tabpfn-v3.5-20260909.safetensors
     source_repo: https://github.com/PriorLabs/TabPFN
     source: https://huggingface.co/Prior-Labs/tabpfn_3_5/blob/06bf2ba35c80a92a3b9abb436b99cf49e7a0365e/tabpfn-v3.5-20260909.safetensors
     revision: 06bf2ba35c80a92a3b9abb436b99cf49e7a0365e

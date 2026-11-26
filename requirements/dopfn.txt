@@ -1,0 +1,13 @@
+torch==2.7.0
+numpy==1.26.4
+scipy==1.13.1
+scikit-learn==1.4.2
+pandas==2.1.4
+PyYAML==6.0.2
+einops==0.8.1
+tqdm==4.67.1
+torchmetrics==1.2.0
+kditransform==0.2.0
+dill==0.4.0
+networkx==3.0
+requests==2.32.5
