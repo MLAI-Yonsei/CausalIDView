@@ -7,7 +7,7 @@ This release provides code for checking experimental results for Figures 2, 3, a
 | [Figure 2](#full-gpu-run) | Aggregate saved scores | Score 24 estimator/view combinations on 40 regenerated SCM worlds | [fig2.csv](results/fig2.csv) |
 | [Figure 3](#figure-3) | Aggregate saved response metrics | Fit and score 24 estimator/view combinations on 40 paired SCM worlds under three outcome conditions | [Figure 3 CSVs](results/fig3/) |
 | [Figure 6](#figure-6) | Re-score saved point and bound predictions | Score synthetic BD/HC, 100 IHDP-HC trials, and partial-identification bounds | [Figure 6 CSVs](results/fig6/) |
-| [Table 2](#table-2) | Aggregate saved scores for all ten estimators | Score six pretrained estimators and four baselines run with the original toolkit | [table2.csv](results/table2/table2.csv) |
+| [Table 2](#table-2) | Aggregate saved scores for all ten estimators | Score six pretrained estimators and four fitted baselines on the same RCT splits | [table2.csv](results/table2/table2.csv) |
 
 ## Analysis environment
 
@@ -251,9 +251,26 @@ Run `python scripts/fig6/verify_fig6.py` to evaluate all three panels together a
 
 ## Table 2
 
-The archive workflow rebuilds the full table for all ten estimators from saved scores. A full run with new predictions uses the six pretrained estimators below and requires fresh scores for four additional baselines from the original toolkit.
+The Table 2 predictor runs all ten estimators. Causal Tree, TARNet, GRF, and CFRNet are fitted from scratch on each primary split. All ten are scored against a null CATE of zero.
 
-Obtain `ACTG175.txt`, Pennsylvania's `Recsfile.dta`, and `illinois.dta` from the original providers. The provenance record lists the download locations, archive member paths, and expected SHA-256 values. Set up the CFM and TabPFN runtimes before running inference. [Table 2 input provenance](data/table2/provenance.json)
+Obtain `ACTG175.txt`, Pennsylvania's `Recsfile.dta`, and `illinois.dta` from the original providers. The provenance record lists the download locations, archive member paths, and expected SHA-256 values. Use the documented CFM and TabPFN model environments and the `.venv-neural` environment for TARNet and CFRNet. [Table 2 input provenance](data/table2/provenance.json)
+
+Causal Tree and GRF run through `Rscript`. The local verification used R 4.4.3. Install the pinned R packages in the repository's `.r_libs/` or supply an existing installation with `--rscript` and `--r-libs`. The R adapters verify the upstream commits at runtime. [R source pins](Baselines/src/baselines/r_backend/sources.py)
+
+```bash
+mkdir -p .r_libs
+export R_LIBS_USER="$PWD/.r_libs"
+Rscript --vanilla - <<'RS'
+lib <- Sys.getenv("R_LIBS_USER")
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+install.packages(c("jsonlite", "remotes"), lib = lib)
+remotes::install_github("susanathey/causalTree",
+  ref = "51a8762bff0ab17b971bce852cb37bece2d8240f", lib = lib, upgrade = "never")
+remotes::install_github("grf-labs/grf",
+  ref = "5bee99b51471f76cb2d63acbc8a9b0ffec408ba0",
+  subdir = "r-package/grf", lib = lib, upgrade = "never")
+RS
+```
 
 ```bash
 python -m pip install -r requirements/table2.txt
@@ -261,13 +278,9 @@ python scripts/table2/predict_table2.py --raw-dir /path/to/raw --prepare-only
 CUDA_VISIBLE_DEVICES=0 python scripts/table2/predict_table2.py --raw-dir /path/to/raw
 ```
 
-The predictor verifies all 120 fixed input and split hashes, runs the six pretrained routes, and scores their predictions against the null CATE of zero. It writes `artifacts/table2/fresh/rct_null_results.csv`. Use `--dataset actg175 --realization 0 --model causalpfn --output-dir artifacts/table2/smoke` for a one-model check. All six pretrained routes ran on the first ACTG 175 realization. The largest absolute difference from the corresponding archived null-CATE scores was `1.40e-4`.
+The predictor verifies all 120 input and split hashes and writes `rct_null_results.csv` and `requested_baseline_results.csv` under `artifacts/table2/fresh/`. Use `--dataset actg175 --realization 0` and a separate `--output-dir` to check one full-size split. Repeat `--model` to choose specific estimators. Causal Tree and GRF run on CPU. To train TARNet and CFRNet on CPU, select `--neural-device cpu`.
 
-A full Table 2 run also requires new scores for Causal Tree, TARNet, GRF, and CFRNet. The original runner fits each model on its assigned split before predicting the queries. The archived CSV records 40 successful primary runs for each model and dataset, including the seeds, input hashes, scores, and runtimes. [Original run records](data/table2/requested_baseline_results.csv)
-
-Use the original R or neural RCT runner with the same primary splits. Place its scored CSV at `artifacts/table2/fresh/requested_baseline_results.csv` or pass it via `--requested-results`. The expected fields include the three unsquared null-CATE scores and the original split and input hashes. The bundled score CSV shows the schema.
-
-For the separate fit-and-score workflow, the original `causalidview_39_reproduce` toolkit has an `additional_baselines.py` launcher. Its `RUNTIMES.md` documents the CausalArena source snapshot, R packages, and neural runtime. With those inputs, run `execute --track table2 --source-root /path/to/CausalArena/MasterSCM --output-dir /path/to/new-run --gpus 0`, then run `aggregate` with the same track, source, and output directory.
+The traditional training code follows the CausalArena Table 2 implementation. TARNet and CFRNet average predictions from three optimization seeds. The seed formula and model order are defined in the adapter, and the neural architecture uses the bundled default profile. [Training adapter](Baselines/src/baselines/table2.py) · [Default profile](configs/baselines/default.yaml) · [Original run records](data/table2/requested_baseline_results.csv)
 
 ```bash
 python scripts/table2/verify_table2.py --plot
@@ -275,12 +288,7 @@ python scripts/table2/verify_table2.py --plot
 
 The verifier checks both score files and the pinned split hashes. It squares each realization's metrics before computing the mean and population standard deviation. It saves the table and `table2_comparison.csv` under `artifacts/table2/fresh/`. The `matches` column checks agreement with the bundled reference, including the displayed values and full-precision means and standard deviations at the default absolute tolerance of `1e-12`. The `display_matches` column reports agreement at the four-decimal precision shown in the table. [Table 2 v2 reference](results/table2/table2.csv)
 
-<details>
-<summary>Fitted model provenance for the four baselines</summary>
-
-The audit of the original experiment outputs reported Causal Tree and GRF `fit.rds` files. Their association with the 40 primary splits for each dataset is still unverified. The audit found no TARNet or CFRNet fitted weights in those output directories. The separate `additional_baselines.py` runner fits all four models before scoring their predictions.
-
-</details>
+Use `--archived` to rebuild the full table from the bundled scores. Local CFRNet reruns can differ from the archive. On Illinois realization 0, the original runner and the bundled implementation produced identical predictions locally, with null sPEHE of `0.12818` compared with `0.10509` in the archive. The comparison CSV reports the measured changes for a fresh run.
 
 ## Optional archive checks
 
