@@ -1,0 +1,244 @@
+{
+  "files": [
+    {
+      "path": "world_000.npz",
+      "sha256": "a6ba44ee9c6ffe9c345c5060fae442541781f062d9bcc1d2ea948fc8d07f1c0a",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_000/world.npz",
+      "source_sha256": "c40c03f1320cc2c9f0229f18a5c08a41522af634da99f8a4464963a127e97a77"
+    },
+    {
+      "path": "world_001.npz",
+      "sha256": "ab745c57e1d68780777b8b4b7985f645eee0adc9f2fb2b1d867a208809405b4d",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_001/world.npz",
+      "source_sha256": "7d75d8b4145376b3c98032bb7d2cfb68446d96e5a6865fd1b5c279d636910ab3"
+    },
+    {
+      "path": "world_002.npz",
+      "sha256": "9d17af1c8532db333c8f9453bb8efe63950d55f6dd80fea54373db42825b28f6",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_002/world.npz",
+      "source_sha256": "7ce42ca9126e803298d1dd6f4801f9cd6ffa963b0a9d898b2f6894ee7da35831"
+    },
+    {
+      "path": "world_003.npz",
+      "sha256": "ec02aa816fb3fad6191dc7fa46312e5aa0b78da39c90ccf256189598ea3b0ac6",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_003/world.npz",
+      "source_sha256": "817541276ab5f400032169de79fc2acbc16e4f5d1161a4c413b2724befe2705b"
+    },
+    {
+      "path": "world_004.npz",
+      "sha256": "d8713fe0a987567e0b7d9016c93f8a4aa1222e43766f006dfdaabcc64f65facf",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_004/world.npz",
+      "source_sha256": "1f014333c71180a7e3573385bd571f47e2452844ae9c837646c93a403f24fe67"
+    },
+    {
+      "path": "world_005.npz",
+      "sha256": "f84bda2d4074b9907bc140d7090817ea99a0e0068aff544780948fcb674e3f7c",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_005/world.npz",
+      "source_sha256": "79c0ef445995ee6e3db8c10b8d75da58377212d4aeb9fccbae22974b47097ece"
+    },
+    {
+      "path": "world_006.npz",
+      "sha256": "78e9e0f86249bdf2f4b10555bdb4a461aea24b74305530282c7cb10b9fcc75b8",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_006/world.npz",
+      "source_sha256": "a733ed2731fd36ca76389f2b6cee15206593b3959530676f221bc484d73b9f7e"
+    },
+    {
+      "path": "world_007.npz",
+      "sha256": "7e36ddfc549221b691a1e8f9bf52fa9903dcf5229c8c939a8d59354a22eab1a2",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_007/world.npz",
+      "source_sha256": "fa726c70384bf2e0eeee876af773f5413b456a4d109ea73c69588219b5a77aac"
+    },
+    {
+      "path": "world_008.npz",
+      "sha256": "72e06fef0c9c42087a426ff8aa72c8c70f3c00cf5f048bd4dcfcd98f9445e1e4",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_008/world.npz",
+      "source_sha256": "f6b02de804e28a12444bab288b850abf5a81d312ac86d344ef34c08d7bca9799"
+    },
+    {
+      "path": "world_009.npz",
+      "sha256": "4133f4c35587264fda4c941f7b0df565c7e03a8bfd55ef03bcf26f496ca0b11b",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_009/world.npz",
+      "source_sha256": "d055ec12386ca610f7f68a67b328b391e4a6a54dcf02e10fe3b2969352cac798"
+    },
+    {
+      "path": "world_010.npz",
+      "sha256": "404a908bb8d096fe579b198ce5e2a140cd545022bdbc34940c7a41a7ba6bc524",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_010/world.npz",
+      "source_sha256": "d9509427c5ee79f91a8af999be7effe5ae3c91b09aa25bc434ef3ef1fa1e76d7"
+    },
+    {
+      "path": "world_011.npz",
+      "sha256": "2fbfff204e40ef967c7654b97bd1e2ada13af15dcc72dbc04d1fc9afcf9c4d2d",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_011/world.npz",
+      "source_sha256": "f633505e2546737d755e89d50b26a4f146d81bca0030b36c082989318aa11fe3"
+    },
+    {
+      "path": "world_012.npz",
+      "sha256": "2597a6dd2c5776e8f7931d34561ea8263860c3aa0ce8fba9c1a84a2410d6a803",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_012/world.npz",
+      "source_sha256": "b08947aaa1559e40f1616d4e3628c0bd819f512d94aa911c3a8e4c08c54daa0c"
+    },
+    {
+      "path": "world_013.npz",
+      "sha256": "f4366d35cd24e0998d49741a4500b200faed2a98e75cda52cc349e29caef14ae",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_013/world.npz",
+      "source_sha256": "9a8c1d28fcf84130ec2e9ac76ca8949ce46ef5e95d8463ec2fa0d24d3768cd0b"
+    },
+    {
+      "path": "world_014.npz",
+      "sha256": "4c9a97a8773c3812617852eba19c631cf011b92b9830fb3a8da6ceaf86abb02a",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_014/world.npz",
+      "source_sha256": "e4dadf7cbdefd04a3793045e6009e1d6790b9938008b2ca976af2f22716d7d5d"
+    },
+    {
+      "path": "world_015.npz",
+      "sha256": "e64f35206f6fefaef6b2412d61160b1f6c773715a590b96febc14345bbcf19a2",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_015/world.npz",
+      "source_sha256": "106fd64fb6f2f2a9b27104a0cc034c2c8692e019d1a135b9459977caf020c91a"
+    },
+    {
+      "path": "world_016.npz",
+      "sha256": "aa21a2d00346dea653386703fd54b2261ed496f340dbb2a7117ae090a1130a2a",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_016/world.npz",
+      "source_sha256": "953f7eb9404440ced510a3509f8c5857ffc2f1c9860bcf33b7d1ba64b5764b25"
+    },
+    {
+      "path": "world_017.npz",
+      "sha256": "919f15cbd51be8eb991934234fb0ef30da094108b143323b0b291c4e59313abb",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_017/world.npz",
+      "source_sha256": "63bfb132a7c898331b062b2cd01f3b80680539e76916b933a8ecc90e492feb8f"
+    },
+    {
+      "path": "world_018.npz",
+      "sha256": "54e5b1c0f841ddccaf30e77fc267647e7eb544840fa04951b9e25d32709c6653",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_018/world.npz",
+      "source_sha256": "c6852919b518ac6a637f4a020bc122687f6c5631fa372606797964791587158e"
+    },
+    {
+      "path": "world_019.npz",
+      "sha256": "16bcfb466930916648929e2ee73d01ab621c71f5c67f13d3243a77211a5b76f1",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_019/world.npz",
+      "source_sha256": "77e984f47126ae368dd3564fed584e1390b326b5ef844e4c70ffd13d8f2bcb4a"
+    },
+    {
+      "path": "world_020.npz",
+      "sha256": "4b85b4b61bc50f2b38330d578a1365f0c813bcda5dbc84df2442ba11dd1d804f",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_020/world.npz",
+      "source_sha256": "ea85d855ce7512970efcc4772413ddac5fcfea1ae2bed285168f0f547ccc8179"
+    },
+    {
+      "path": "world_021.npz",
+      "sha256": "4829bfafc17bb7a56a4a6122a44c0f844abcd9e1d80550d94393cdd5934b4676",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_021/world.npz",
+      "source_sha256": "a1d60f61dc53881b2969432b083aae43d1d1921ab65b5b299d40e386026fc187"
+    },
+    {
+      "path": "world_022.npz",
+      "sha256": "9878bad8a326910b5d631f91f8efe6e1fd36a7ee8c2b1dc0591e2bdc71c4d266",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_022/world.npz",
+      "source_sha256": "c7a56b1262c5f232af64565c1eb220a1f003faa14e56f9763717c3738a072068"
+    },
+    {
+      "path": "world_023.npz",
+      "sha256": "7833092017f7101e505b346196104e9c11a2cb4ba623ceae54ace458f1de2c44",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_023/world.npz",
+      "source_sha256": "514aa6f972ae6b41ff7e8284464cb9d5cdb4ba0c9cbcf34ce17f46c47c76ad9b"
+    },
+    {
+      "path": "world_024.npz",
+      "sha256": "2720dc833be8555509eda0c181f284b56d19cef7e3139e3601ea15442763583a",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_024/world.npz",
+      "source_sha256": "501ef5285532931ff8b2f4692e990cc66d82ed67c11fced900b5b606205ad52b"
+    },
+    {
+      "path": "world_025.npz",
+      "sha256": "59a026a4a455b927f13a218e57ee65f6241fbe9f78012d92a69357741f518f2e",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_025/world.npz",
+      "source_sha256": "d7675ad276a7a4ccf0d1f6ef8fe1a0cffeb9bcfc8f5b9837b928cd1b949d6a3f"
+    },
+    {
+      "path": "world_026.npz",
+      "sha256": "2f98dfb4740f90f79e5d076c560b04b6d8330a248ff3879849f08f2d8a2a9f1d",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_026/world.npz",
+      "source_sha256": "7d2cb34ef0dbcbedb4cd02c8bf579992234937a1e90b3a93abeb3b44254aabe4"
+    },
+    {
+      "path": "world_027.npz",
+      "sha256": "c480b443c5a9d4ada6d9567c5366acad06b21d0cbc14e5219a68d9d4e7565b89",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_027/world.npz",
+      "source_sha256": "fc1bc131287c411b8c59f66039d905bf6ee538f58427a04039261a50170ef79a"
+    },
+    {
+      "path": "world_028.npz",
+      "sha256": "ff2e04521a3acefb4d037567418f23d2ea90de8b41875a2ad912c76ce49fc17f",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_028/world.npz",
+      "source_sha256": "ed416f2d174f9591cdf31bd485076e2185b83a182bab43bf3de95bf9057ca55b"
+    },
+    {
+      "path": "world_029.npz",
+      "sha256": "467d4564f100fbc5c52486e07148c3be5f88e4ca218a4c0d715852ad4896a7ac",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_029/world.npz",
+      "source_sha256": "0f2fd3b61709f8dc4f58a90d3d3221e2ae6f6a9cf7d32bd169f3b2460fd32336"
+    },
+    {
+      "path": "world_030.npz",
+      "sha256": "5d311cff4fa204ae1ac1d6f2292b2e945ac360e057f008842acea1262508d107",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_030/world.npz",
+      "source_sha256": "b9a00dc54f2a006b21511d780b9f8bc58f06603ba3be740606062679b35fc794"
+    },
+    {
+      "path": "world_031.npz",
+      "sha256": "da46e1b250ff5795a46e174e048fa91355d6b73cbe72c58e8b0c00350e886447",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_031/world.npz",
+      "source_sha256": "f199c269ce8b6ec357a4d3259bf61eae12ee46900aa3de0a6f0776d90a6ac010"
+    },
+    {
+      "path": "world_032.npz",
+      "sha256": "576ab3b1f43a2b840a064bc1c5b6eb71a974a5e37e7538fbacb9872360507e8d",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_032/world.npz",
+      "source_sha256": "cd666b975e005bd057250b01d9eb07458b29c44986232e6ee1361fa830985967"
+    },
+    {
+      "path": "world_033.npz",
+      "sha256": "cce3bdcc9aebc8e00638cccd8a04cf29ae1cb37b4b0c70ead12051aa3486b102",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_033/world.npz",
+      "source_sha256": "3338112633ec73bea36660fa70917e3e49c01a2497077856592db59f86d6e10a"
+    },
+    {
+      "path": "world_034.npz",
+      "sha256": "b7b2186574abe35cfce9bb2c1292b0b762203b37039e847381a19431cb0b74c7",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_034/world.npz",
+      "source_sha256": "8ce6014c8d19e30b06ebf2bad87339ac61169b40a87ed8b39a50adfa55f534e4"
+    },
+    {
+      "path": "world_035.npz",
+      "sha256": "f3c384830f0f152712f1c7ed775e38b19727d380725aabedb8a74143218377d0",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_035/world.npz",
+      "source_sha256": "25da0a745fe184a18e0ead50191f5c66f2cd03a1a184aead01acecf150b4b5a4"
+    },
+    {
+      "path": "world_036.npz",
+      "sha256": "e4dfd77b5fa62f2cad912f5da6f15a302510bcc90d2b5ce6e1ffe4d3aa142e8b",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_036/world.npz",
+      "source_sha256": "4d63d006f02216f9ebd961271cef75d3389ba166eee7a77c3d4d9595b5124267"
+    },
+    {
+      "path": "world_037.npz",
+      "sha256": "525fa5e20b4e866fed1645e2c55c63f87ef586c3b8b16289fac82965150a8602",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_037/world.npz",
+      "source_sha256": "29f0d3d39965923865423efbc19dd8b3a7157b830cc7055d853b7170e38ea60d"
+    },
+    {
+      "path": "world_038.npz",
+      "sha256": "cb056fec3250a9d2261b36ba3c1e9750913bd87c3164cd574d271d26ddf36694",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_038/world.npz",
+      "source_sha256": "3f4376906dd37101dfe585a0f4ed7592d44fd962c64537b965b4f61cd5915211"
+    },
+    {
+      "path": "world_039.npz",
+      "sha256": "e7f9fada93471acecc8b08ff424d7ebb41cc030c2106293025dd88d0b0183fec",
+      "source": "MasterSCM/experiments/partial_identification/data/worlds/world_039/world.npz",
+      "source_sha256": "ab4571310f2716fe4227305f58d9d98e7856eaf165c4d17848baeffb08ec9b29"
+    }
+  ]
+}

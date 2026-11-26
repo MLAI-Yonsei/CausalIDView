@@ -1,0 +1,92 @@
+diff --git a/data/data_structures.py b/data/data_structures.py
+index fa55690..219d9a6 100644
+--- a/data/data_structures.py
++++ b/data/data_structures.py
+@@ -99,7 +99,10 @@ class CausalDataset(Dataset):
+                     return {**x, **a, **idx}
+ 
+     def add_propensity_scores(self, propensity_model):
+-        self.data["propensity"] = propensity_model.predict(self.data["x"]).detach()
++        # Keep the stored dataset on CPU while allowing an accelerator-resident
++        # propensity model (Lightning does not move it back after fitting).
++        device = next(propensity_model.parameters()).device
++        self.data["propensity"] = propensity_model.predict(self.data["x"].to(device)).detach().cpu()
+         if self.get_dims(["a"])["a"] == 1:
+             self.data["propensity"] = self.data["a"] * self.data["propensity"] + \
+                                       (1 - self.data["a"]) * (1 - self.data["propensity"])
+diff --git a/models/stage1.py b/models/stage1.py
+index f03f3e6..c162c20 100644
+--- a/models/stage1.py
++++ b/models/stage1.py
+@@ -29,6 +29,18 @@ class CNF(pl.LightningModule, ABC):
+         self.optimizer = torch.optim.Adam(self.transform.parameters(), lr=config["lr"])
+         self.save_hyperparameters(config)
+ 
++    def rebuild_distributions(self, device=None):
++        """Recreate non-buffer torch distributions after Lightning device moves."""
++        if device is None:
++            device = self.device
++        dim_y = self.config["dim_y"]
++        base = dist.MultivariateNormal(torch.zeros(dim_y, device=device),
++                                       torch.eye(dim_y, device=device))
++        self.dist_y_given_x_training = dist.ConditionalTransformedDistribution(base, [self.transform])
++
++    def on_fit_start(self):
++        self.rebuild_distributions(self.device)
++
+     def configure_optimizers(self):
+         return self.optimizer
+ 
+@@ -110,4 +122,3 @@ class CNF_stage1(CNF):
+ 
+     def fit(self, d_train, d_val=None, name=""):
+         return utils.fit_model(self, d_train, d_val, name=name)
+-
+diff --git a/models/stage2.py b/models/stage2.py
+index ebfd0d7..cf0c30e 100644
+--- a/models/stage2.py
++++ b/models/stage2.py
+@@ -1,5 +1,6 @@
+ import pytorch_lightning as pl
+ import torch
++import torch.nn as nn
+ import pyro.distributions as dist
+ import pyro.distributions.transforms as T
+ from pyro.nn import ConditionalAutoRegressiveNN, AutoRegressiveNN
+@@ -14,7 +15,10 @@ class Stage2(pl.LightningModule, ABC):
+     def __init__(self, config, trained_models, sensitivity_model, causal_query):
+         super().__init__()
+         self.config = config
+-        self.trained_models = trained_models
++        # ModuleDict makes the already-trained propensity and Stage-1 flow
++        # follow Lightning device moves. The upstream plain dict leaves them
++        # on CPU while Stage 2 moves to CUDA.
++        self.trained_models = nn.ModuleDict({key: value for key, value in trained_models.items() if value is not None})
+         self.sensitivity_model = sensitivity_model
+         self.causal_query = causal_query
+         # Variables for training
+@@ -36,6 +40,24 @@ class Stage2(pl.LightningModule, ABC):
+         self.neptune = config["neptune"]
+         self.save_hyperparameters(config)
+ 
++    def on_fit_start(self):
++        self.lambdas = self.lambdas.to(self.device)
++        self.dist_base = dist.MultivariateNormal(
++            torch.zeros(self.config["dim_y"], device=self.device),
++            torch.eye(self.config["dim_y"], device=self.device),
++        )
++        self.trained_models["stage1"].rebuild_distributions(self.device)
++        self.dist_shifted_obj = dist.ConditionalTransformedDistribution(self.dist_base, [self.transform])
++        if self.config["a_type"] == "discrete":
++            self.dist_shifted = ConditionalMixtureSameFamily(
++                self.dist_base, self.dist_shifted_obj, self.trained_models["propensity"],
++            )
++        else:
++            self.dist_shifted = self.dist_shifted_obj
++        self.dist_shifted_y = dist.ConditionalTransformedDistribution(
++            self.dist_shifted, [self.trained_models["stage1"].transform],
++        )
++
+     def configure_optimizers(self):
+         return self.optimizer
+ 

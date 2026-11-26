@@ -5,12 +5,12 @@ import numpy as np
 import pandas as pd
 import yaml
 
-from data.estimators import backdoor, frontdoor, iv, proximal
+from baselines.fig2 import MODEL_IDS, runtime
 from data.ground_truth import query_ground_truth
 from data.metrics import point_metrics
 from data.scm import sample_world
 from data.views import EXTRA_COLUMNS, REGIMES, observational_view
-from scripts.plot_fig2 import render
+from scripts.fig2.plot_fig2 import render
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -99,16 +99,10 @@ def test_current_panel_contract_is_shared_by_config_adapters_and_results():
     }
     assert configured == CURRENT_PANELS
 
-    adapter_models = {
-        "BD": backdoor.MODELS,
-        "FD": frontdoor.MODELS,
-        "IV": iv.MODELS,
-        "PROX": proximal.MODELS,
-    }
-    assert adapter_models == {
-        regime: tuple(model for model, _ in models)
-        for regime, models in CURRENT_PANELS.items()
-    }
+    assert MODEL_IDS == {model for models in CURRENT_PANELS.values() for model, _ in models}
+    for regime, models in CURRENT_PANELS.items():
+        for model, _ in models:
+            assert runtime(model, regime)[0]
 
     frame = pd.read_csv(ROOT / "results" / "fig2.csv").sort_values(
         ["regime", "panel_order"]
@@ -173,7 +167,7 @@ def test_public_files_have_no_local_path_or_identity_leak():
     local_absolute_path = re.compile(r"/(?:home|data\d+)/[A-Za-z0-9._-]+/")
     public = [ROOT / "README.md", ROOT / "configs" / "fig2.yaml"]
     public += list((ROOT / "data").rglob("*.py"))
-    public += list((ROOT / "scripts").glob("*.py"))
+    public += list((ROOT / "scripts").rglob("*.py"))
     for path in public:
         text = path.read_text().lower()
         assert local_absolute_path.search(text) is None, path

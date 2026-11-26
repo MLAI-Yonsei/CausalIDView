@@ -1,0 +1,74 @@
+{
+  "classical": {
+    "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+    "packages": {
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "torch": "2.13.0+cu126",
+      "xgboost": "3.1.3",
+      "econml": "0.17.0",
+      "tabpfn": "8.2.0"
+    }
+  },
+  "causalpfn": {
+    "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+    "packages": {
+      "numpy": "2.0.2",
+      "scipy": "1.13.1",
+      "scikit-learn": "1.6.1",
+      "torch": "2.7.0",
+      "xgboost": null,
+      "econml": null,
+      "tabpfn": "2.0.9"
+    }
+  },
+  "dopfn": {
+    "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+    "packages": {
+      "numpy": "1.26.4",
+      "scipy": "1.13.1",
+      "scikit-learn": "1.4.2",
+      "torch": "2.7.0",
+      "xgboost": null,
+      "econml": null,
+      "tabpfn": "2.0.9"
+    }
+  },
+  "neural": {
+    "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+    "packages": {
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "torch": "2.13.0+cu126",
+      "xgboost": null,
+      "econml": null,
+      "tabpfn": null
+    }
+  },
+  "tabpfn": {
+    "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+    "packages": {
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "torch": "2.13.0+cu126",
+      "xgboost": "3.1.3",
+      "econml": "0.17.0",
+      "tabpfn": "9.0.0"
+    }
+  },
+  "causalfm": {
+    "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+    "packages": {
+      "numpy": "2.0.2",
+      "scipy": "1.13.1",
+      "scikit-learn": "1.6.1",
+      "torch": "2.7.0",
+      "xgboost": null,
+      "econml": null,
+      "tabpfn": "2.0.9"
+    }
+  }
+}

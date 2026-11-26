@@ -51,7 +51,7 @@ def _raw_cate(x: np.ndarray, family: str, p: Mapping[str, np.ndarray]) -> np.nda
     if family == "linear":
         return a
     if family == "quadratic_interaction":
-        return 0.7 * a + 0.45 * a * b + 0.25 * (b * b - 1.0)
+        return 0.7 * a + 0.45 * (a * b) + 0.25 * (b * b - 1.0)
     if family == "threshold_piecewise":
         return 0.75 * (a > 0) - 0.55 * (b > 0.4) + 0.25 * a
     if family == "fourier_nonstationary":
