@@ -1,30 +1,53 @@
-# CausalIDView experiments
+# CausalIDView
 
-This release provides code for checking experimental results for Figures 2, 3, and 6 and Table 2 of CausalIDView. To check whether a run reproduces a result, use the documented evaluation settings and compare its output with the corresponding reference CSV bundled in `results/`. The archive workflows check scoring or aggregation from saved inputs on CPU. The new-prediction workflows also run model inference. [Paper, v1](https://arxiv.org/abs/2609.36881v1)
+Experiment code and reproduction assets for **CausalIDView**.
 
-| Experiment | With archived inputs | With new predictions | Bundled v2 reference |
-| --- | --- | --- | --- |
-| [Figure 2](#full-gpu-run) | Aggregate saved scores | Score 24 estimator/view combinations on 40 regenerated SCM worlds | [fig2.csv](results/fig2.csv) |
-| [Figure 3](#figure-3) | Aggregate saved response metrics | Fit and score 24 estimator/view combinations on 40 paired SCM worlds under three outcome conditions | [Figure 3 CSVs](results/fig3/) |
-| [Figure 6](#figure-6) | Re-score saved point and bound predictions | Score synthetic BD/HC, 100 IHDP-HC trials, and partial-identification bounds | [Figure 6 CSVs](results/fig6/) |
-| [Table 2](#table-2) | Aggregate saved scores for all ten estimators | Score six pretrained estimators and four fitted baselines on the same RCT splits | [table2.csv](results/table2/table2.csv) |
+[Paper (v1)](https://arxiv.org/abs/2609.36881v1) · [Code](https://github.com/MLAI-Yonsei/CausalIDView)
 
-## Analysis environment
+[Overview](#overview) · [Installation & usage](#installation--usage) · [Main results](#main-results) · [Code layout](#code-layout) · [Citation](#citation)
 
-Run the commands from the repository root. The analysis environment handles world generation, orchestration, scoring, and plots. Model workers have their own environments.
+## Overview
+
+CausalIDView evaluates conditional average treatment effect (CATE) estimators across identification views, outcome changes, hidden confounding, and randomized trials.
+
+- **Verify the bundled results on CPU.** Start with the [analysis environment](#analysis-environment) and [archive commands](#verify-the-bundled-results-on-cpu).
+- **Run the experiments from inputs.** Follow [model setup](#model-setup) and the commands for the experiment you want to rerun. Check [Main results](#main-results) for reference files and how to interpret differences in a fresh run.
+
+## Installation & usage
+
+### Analysis environment
+
+Clone the repository and run the commands from its root. Keep the analysis environment active for orchestration, scoring, and plotting. Model workers use separate environments.
 
 ```bash
+git clone https://github.com/MLAI-Yonsei/CausalIDView.git
+cd CausalIDView
 python3.10 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 python -m pytest -q tests
 ```
 
-## Model setup
+### Verify the bundled results on CPU
+
+After installing the analysis environment, run these commands to verify the bundled v2 results and render the figures and table. This workflow needs no GPU, model runtimes, checkpoints, or external datasets. Outputs go to separate archive directories under `artifacts/`. The Figure 6 command scores panels (a) and (b) and the Γ=2 sensitivity results in panel (c).
+
+```bash
+python scripts/fig2/verify_fig2.py --archived --output artifacts/fig2_archived/fig2.csv
+python scripts/fig2/plot_fig2.py --input artifacts/fig2_archived/fig2.csv --output artifacts/fig2_archived/fig2.pdf
+python scripts/fig3/verify_fig3.py --archived
+python scripts/fig3/plot_fig3.py --input artifacts/fig3_archived/fig3.csv --output artifacts/fig3_archived/fig3.pdf
+python scripts/fig6/verify_fig6.py --archived
+python scripts/table2/verify_table2.py --archived --plot
+```
+
+Figures 2 and 3 and Table 2 aggregate archived scores. Figure 6 recomputes the scores from archived per-query estimates and ground truth. Figure 6 and Table 2 also accept explicit replacement paths in archive mode.
+
+### Model setup
 
 Use Linux x86-64 with glibc 2.28 or newer and Python 3.10 for the published model profiles. Install Git for the Do-PFN source checkout. For the full run, use a CUDA-capable GPU with compatible drivers.
 
-### 1. Install the model runtimes
+#### 1. Install the model runtimes
 
 Each model runs in a separate Python environment. Install only the profile you need for a one-world check, or all six for the full figure.
 
@@ -47,9 +70,19 @@ done
 - **PyTorch wheels.** The archived neural and TabPFN environments use `torch==2.13.0+cu126`. If your package index does not provide it, point `--find-links` at a directory containing that exact wheel. The requirements files pin direct dependencies. Wheel and transitive dependency availability can vary by platform. [Recorded versions](requirements/reference-runtime.json)
 - **Existing environments.** Pass `--python-<runtime> /path/to/python` to use an existing interpreter. The launcher checks Python 3.10, relevant package versions, and CUDA availability before fitting. Use `--device cpu` for supported standalone CFM and neural checks. TabPFN-v3.5 uses CUDA.
 
-### 2. Download and verify the checkpoints
+#### 2. Download and verify the checkpoints
 
-For the full run, accept the TabPFN-v3.5 license and authenticate with `huggingface-cli login` or an authenticated `HF_TOKEN`. [TabPFN-v3.5 model page](https://huggingface.co/Prior-Labs/tabpfn_3_5)
+Checkpoints are downloaded separately from the Git clone. The setup scripts fetch them from GitHub or Hugging Face and place them under `Baselines/`. You can run setup on any machine with access to those hosts.
+
+| Model | Upstream weights | Setup |
+| --- | --- | --- |
+| CausalPFN | [Hugging Face](https://huggingface.co/vdblm/causalpfn) | Figure 2 setup |
+| CausalFM (standard, FD, IV binary) | [GitHub](https://github.com/yccm/CausalFM-toolkit) | Figure 2 setup |
+| Do-PFN | [GitHub](https://github.com/jr2021/Do-PFN) | Figure 2 setup |
+| TabPFN v3.5 | [Hugging Face](https://huggingface.co/Prior-Labs/tabpfn_3_5) | Figure 2 setup, requires login and license acceptance |
+| CSA-PFN (MSM) | [Hugging Face](https://huggingface.co/arunkatika/csa-pfn-msm) | [Figure 6(c) setup](#partial-identification-predictions) |
+
+For runs that use TabPFN v3.5, accept the license on its model page, then run `huggingface-cli login` in the analysis environment or provide an authenticated `HF_TOKEN`. Run the following for the full Figure 2 checkpoint set.
 
 ```bash
 python scripts/fig2/prepare_fig2.py
@@ -79,9 +112,14 @@ Local files go through the same hash checks.
 
 </details>
 
-## One-world check
+### One-world check
 
-KIV uses the `classical` runtime and runs on CPU.
+This smoke test uses the `classical` runtime and a single SCM world. It runs on CPU without model checkpoints. If you skipped full model setup, install just this runtime first.
+
+```bash
+python3.10 -m venv .venv-classical
+.venv-classical/bin/python -m pip install -r requirements/classical.txt
+```
 
 ```bash
 python scripts/fig2/generate_data.py
@@ -91,7 +129,9 @@ python scripts/fig2/run_fig2.py --regime IV --model kiv --world 0 --output artif
 
 For a GPU check with a prepared CausalPFN checkpoint, run `CUDA_VISIBLE_DEVICES=0 python scripts/fig2/predict_fig2.py --regime BD --model causalpfn --world 0`.
 
-## Full GPU run
+<a id="full-gpu-run"></a>
+
+### Figure 2
 
 Use the activated `.venv` environment and complete model setup first. Regenerate the worlds and use a fresh prediction directory when upgrading from a previous version. The figure compares six estimators across four views on 40 paired structural causal model (SCM) worlds. Each world has 1,024 context rows and 100 query rows. Use `PROX` on the command line for the PX panel. [Figure 2 v2 reference](results/fig2.csv)
 
@@ -137,17 +177,7 @@ test "$status0" -eq 0 && test "$status1" -eq 0
 
 </details>
 
-## Verification status
-
-| Check | Result |
-| --- | --- |
-| Aggregation of archived metrics | All 24 rows match the bundled Figure 2 reference exactly. |
-| Regenerated SCM worlds | All 40 match the archived query covariate hashes, IDs, and true CATE values. |
-| Pinned Do-PFN on RTX 4090 | Across 160 jobs, the maximum aggregate delta was `3.09e-5` over the mean, confidence interval endpoints, and error components. |
-| Model order using combined results | All four views match the bundled Figure 2 order when the pinned Do-PFN scores replace the Do-PFN scores in the saved 960-job run that predates the SCM arithmetic correction. |
-| Full GPU rerun with the corrected SCM and pinned Do-PFN | Strict numerical verification at `1e-12` remains open. |
-
-## Figure 3
+### Figure 3
 
 Figure 3 reports spurious response (`E_stay`) and change-tracking error (`E_move`) for the same 24 estimator/view combinations as Figure 2. Each of the 40 worlds has the same 1,024 context units and 100 query units in all three conditions. `stay` reverses the direct confounding contribution to the outcome and preserves CATE. `move` doubles the mediator's outcome coefficient and doubles CATE. The bundled [query IDs and original CATE](results/fig2_world_manifest.json) serve as evaluator targets. The worker fits each condition with the original model and seed, using the observed context outcomes for that condition.
 
@@ -171,13 +201,13 @@ The [Figure 3 reference](results/fig3/reference_manifest.json) uses the 40-world
 
 The archive check reproduced all 24 summary rows. A fresh CPU run of KIV across all 40 worlds and three conditions matched both per-world metrics within `8e-13`. Strict agreement of the full fresh GPU run with this reference is unverified.
 
-## Figure 6
+### Figure 6
 
 This reproduction includes panels (a), (b), and (c). The sensitivity setting for panel (c) is Γ=2.
 
 Generate the predictions for the panel you want to check. Each verifier uses that panel's held-out targets and bundled v2 reference. CATE containment uses the true CATE.
 
-### Synthetic point predictions
+#### Synthetic point predictions
 
 Figure 6(a) uses the Figure 2 worlds, runtimes, and checkpoints. The observed input includes all 51 covariates and the hidden-confounding input omits the final confounder.
 
@@ -188,7 +218,7 @@ CUDA_VISIBLE_DEVICES=0 python scripts/fig6/predict_fig6a.py
 
 The runner writes `artifacts/fig6a_predictions/`. Use `--dry-run` to list the 480 jobs. For a small run, use `--world 0 --model tabpfn_x` and a separate `--predictions` directory.
 
-### IHDP-HC point predictions
+#### IHDP-HC point predictions
 
 Figure 6(b) uses the three CFM runtimes from [Model setup](#model-setup) and a separate TabPFN 9.2.0 environment. This environment shares the pinned v3.5 checkpoint with Figure 2.
 
@@ -206,7 +236,7 @@ Both runners write model-specific files under `artifacts/fig6b_predictions/`. Ea
 
 The CFM smoke run used trial 0 in both conditions. The largest absolute sPEHE differences from the archive were `4.7e-6` for CausalPFN, `1.9e-7` for CausalFM, and `0.00156` for Do-PFN. TabPFN 9.2.0 rerun scores can also differ from the archive.
 
-### Partial-identification predictions
+#### Partial-identification predictions
 
 The bound runner reads the 40 frozen observed worlds under `data/fig6/bound_worlds/` and uses the estimators in `Baselines/src/baselines/partial_identification/`. The worlds are ready to use.
 
@@ -231,7 +261,7 @@ done
 
 B-Learner and NeuralCSA fit on each world's context rows before predicting its query bounds. Omitting `--world` runs all 40 worlds. Each model writes a new CSV under `artifacts/fig6_bounds/`. The sensitivity CSVs contain Γ=2 endpoints. For a one-world check, add `--world 0 --output /tmp/fig6-bounds.csv`.
 
-### Score and compare each panel
+#### Score and compare each panel
 
 ```bash
 python scripts/fig6/verify_fig6a.py
@@ -249,11 +279,26 @@ Each command writes numerical CSVs and a source manifest. Use `--predictions` fo
 
 Run `python scripts/fig6/verify_fig6.py` to evaluate all three panels together and render the figure. Add `--paper-reference` for the historical comparison against the PDF bar heights.
 
-## Table 2
+### Table 2
 
 The Table 2 predictor runs all ten estimators. Causal Tree, TARNet, GRF, and CFRNet are fitted from scratch on each primary split. All ten are scored against a null CATE of zero.
 
-Obtain `ACTG175.txt`, Pennsylvania's `Recsfile.dta`, and `illinois.dta` from the original providers. The provenance record lists the download locations, archive member paths, and expected SHA-256 values. Use the documented CFM and TabPFN model environments and the `.venv-neural` environment for TARNet and CFRNet. [Table 2 input provenance](data/table2/provenance.json)
+Download the three raw datasets and put the files directly under the directory passed to `--raw-dir`. The preparation command checks their SHA-256 hashes.
+
+| File | Download | File to extract |
+| --- | --- | --- |
+| `ACTG175.txt` | [ACTG175 text file](https://raw.githubusercontent.com/mjuraska/speff2trial/master/data/ACTG175.txt) | Save as `ACTG175.txt` |
+| `Recsfile.dta` | [Pennsylvania ZIP](https://www.upjohn.org/sites/default/files/2019-02/PA_ReempBonus.zip) | `cd/data/Upjohn Institute Created files/Recsfile.dta` |
+| `illinois.dta` | [Illinois ZIP](https://www.upjohn.org/sites/default/files/2019-04/il_ui_experiment_data-images-install.zip) | `data/illinois.dta` |
+
+```text
+/path/to/raw/
+├── ACTG175.txt
+├── Recsfile.dta
+└── illinois.dta
+```
+
+Use the CFM and TabPFN runtimes from model setup and the `.venv-neural` runtime for TARNet and CFRNet. [Table 2 input provenance and checksums](data/table2/provenance.json)
 
 Causal Tree and GRF run through `Rscript`. The local verification used R 4.4.3. Install the pinned R packages in the repository's `.r_libs/` or supply an existing installation with `--rscript` and `--r-libs`. The R adapters verify the upstream commits at runtime. [R source pins](Baselines/src/baselines/r_backend/sources.py)
 
@@ -290,22 +335,31 @@ The verifier checks both score files and the pinned split hashes. It squares eac
 
 Use `--archived` to rebuild the full table from the bundled scores. Local CFRNet reruns can differ from the archive. On Illinois realization 0, the original runner and the bundled implementation produced identical predictions locally, with null sPEHE of `0.12818` compared with `0.10509` in the archive. The comparison CSV reports the measured changes for a fresh run.
 
-## Optional archive checks
+## Main results
 
-Use these CPU commands to check that the released scores or predictions yield the v2 reference summaries. They write separate archive outputs. The Figure 6 command scores panels (a) and (b) and the Γ=2 sensitivity results in panel (c).
+Compare fresh outputs against the bundled v2 references. A verifier can write a comparison CSV and then exit with an error because the results differ. If the report exists, use it to distinguish a numerical mismatch from missing inputs or an incomplete run.
 
-```bash
-python scripts/fig2/verify_fig2.py --archived --output artifacts/fig2_archived/fig2.csv
-python scripts/fig2/plot_fig2.py --input artifacts/fig2_archived/fig2.csv --output artifacts/fig2_archived/fig2.pdf
-python scripts/fig3/verify_fig3.py --archived
-python scripts/fig3/plot_fig3.py --input artifacts/fig3_archived/fig3.csv --output artifacts/fig3_archived/fig3.pdf
-python scripts/fig6/verify_fig6.py --archived
-python scripts/table2/verify_table2.py --archived --plot
-```
+| Experiment | Bundled v2 reference | Fresh comparison under `artifacts/` | How the fresh verifier handles differences |
+| --- | --- | --- | --- |
+| [Figure 2](#figure-2) | [fig2.csv](results/fig2.csv) | `fig2_fresh/fig2_comparison.csv` | Fails above the default absolute tolerance of `1e-12`. Strict agreement for the full corrected GPU run remains open. |
+| [Figure 3](#figure-3) | [Figure 3 CSVs](results/fig3/) | `fig3_fresh/fig3_comparison.csv` | Fails when comparisons exceed the default absolute and relative tolerances of `1e-10`. The full fresh GPU run remains unverified against this reference. |
+| [Figure 6](#figure-6) | [Figure 6 CSVs](results/fig6/) | `fig6a_fresh/comparison.csv`, `fig6b_fresh/comparison.csv`, `fig6c_fresh/comparison.csv` | Panel verifiers report numerical differences by default. Pass `--atol` to require agreement. |
+| [Table 2](#table-2) | [table2.csv](results/table2/table2.csv) | `table2/fresh/table2_comparison.csv` | Fails on mismatches and reports both full-precision and four-decimal comparisons. Fresh CFRNet scores can differ from the archive. |
 
-Figures 2 and 3 and Table 2 aggregate archived scores. Figure 6 recomputes the scores from archived per-query estimates and ground truth. Figure 6 and Table 2 also accept explicit replacement paths in archive mode.
+<details>
+<summary><strong>Figure 2 verification details</strong></summary>
 
-## Repository guide
+| Check | Result |
+| --- | --- |
+| Aggregation of archived metrics | All 24 rows match the bundled Figure 2 reference exactly. |
+| Regenerated SCM worlds | All 40 match the archived query covariate hashes, IDs, and true CATE values. |
+| Pinned Do-PFN on RTX 4090 | Across 160 jobs, the maximum aggregate delta was `3.09e-5` over the mean, confidence interval endpoints, and error components. |
+| Model order using combined results | All four views match the bundled Figure 2 order when the pinned Do-PFN scores replace the Do-PFN scores in the saved 960-job run that predates the SCM arithmetic correction. |
+| Full GPU rerun with the corrected SCM and pinned Do-PFN | Strict numerical verification at `1e-12` remains open. |
+
+</details>
+
+## Code layout
 
 | Path | What you will find |
 | --- | --- |
@@ -330,3 +384,7 @@ Figures 2 and 3 and Table 2 aggregate archived scores. Figure 6 recomputes the s
 - **Figure 2 and Appendix Table 7.** The means for 23 cells agree to three decimals. For FD TabPFN-v3.5, Figure 2 records `0.15339920346215882` and Table 7 Default displays `0.154`. The verifier uses the bundled Figure 2 CSV.
 
 </details>
+
+## Citation
+
+Cite the [CausalIDView paper (arXiv:2609.36881v1)](https://arxiv.org/abs/2609.36881v1) when using this code or the benchmark results.
