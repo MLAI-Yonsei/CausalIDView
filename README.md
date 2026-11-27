@@ -103,24 +103,69 @@ done
 
 #### 2. Download and verify the checkpoints
 
-Checkpoints are downloaded separately from the Git clone. The setup scripts fetch them from GitHub or Hugging Face and place them under `Baselines/`. You can run setup on any machine with access to those hosts.
+Download the checkpoint files from the lab's Hugging Face account, [`mlaipublic`](https://huggingface.co/mlaipublic). The public mirrors can be downloaded anonymously. Checkpoint provenance and licensing are recorded in each model card.
 
-| Model | Upstream weights | Setup |
+| Model | Lab mirror | Upstream distribution |
 | --- | --- | --- |
-| CausalPFN | [Hugging Face](https://huggingface.co/vdblm/causalpfn) | Figure 2 setup |
-| CausalFM (standard, FD, IV binary) | [GitHub](https://github.com/yccm/CausalFM-toolkit) | Figure 2 setup |
-| Do-PFN | [GitHub](https://github.com/jr2021/Do-PFN) | Figure 2 setup |
-| TabPFN v3.5 | [Hugging Face](https://huggingface.co/Prior-Labs/tabpfn_3_5) | Figure 2 setup, requires login and license acceptance |
-| CSA-PFN (MSM) | [Hugging Face](https://huggingface.co/arunkatika/csa-pfn-msm) | [Figure 6(c) setup](#partial-identification-predictions) |
+| CausalPFN | [Public](https://huggingface.co/mlaipublic/CausalIDView-CausalPFN) | [Hugging Face](https://huggingface.co/vdblm/causalpfn) |
+| CausalFM (standard, FD, IV binary) | [Public](https://huggingface.co/mlaipublic/CausalIDView-CausalFM) | [GitHub](https://github.com/yccm/CausalFM-toolkit) |
+| Do-PFN | [Private](https://huggingface.co/mlaipublic/CausalIDView-Do-PFN) | [GitHub](https://github.com/jr2021/Do-PFN) |
+| TabPFN v3.5 | [Public](https://huggingface.co/mlaipublic/CausalIDView-TabPFN-v3.5) | [Hugging Face](https://huggingface.co/Prior-Labs/tabpfn_3_5) |
+| CSA-PFN (MSM) | [Private](https://huggingface.co/mlaipublic/CausalIDView-CSA-PFN-MSM) | [Hugging Face](https://huggingface.co/arunkatika/csa-pfn-msm) |
 
-For runs that use TabPFN v3.5, accept the license on its model page, then run `huggingface-cli login` in the analysis environment or provide an authenticated `HF_TOKEN`. Run the following for the full Figure 2 checkpoint set.
+TabPFN v3.5 is subject to the [Prior Labs non-commercial license](https://huggingface.co/mlaipublic/CausalIDView-TabPFN-v3.5/blob/13390abe04c061f6e0d654c013af418fceee0860/LICENSE). Review the terms before downloading or using the weights.
+
+**Try the lab Hugging Face mirrors first.** Run the block below from the repository root with the analysis environment active. It downloads the public lab mirrors and prepares Do-PFN from its public upstream release. For access to both private lab mirrors, sign in with `huggingface-cli login` or set `HF_TOKEN` to a token that can read both repositories, then run `export CAUSALIDVIEW_PRIVATE_MIRRORS=1` before this block. That option also installs CSA-PFN for Figure 6(c). Git access to the Do-PFN upstream repository is needed in both cases to fetch its pinned source.
+
+```bash
+python - <<'PY'
+import os
+from pathlib import Path
+
+import yaml
+
+from scripts.fig2.prepare_fig2 import install, prepare_dopfn_source, prepare_runtime_files
+
+specs = yaml.safe_load(Path("configs/fig2.yaml").read_text())["checkpoints"]
+
+def mirror(spec, repo, revision, filename):
+    source = f"https://huggingface.co/mlaipublic/{repo}/blob/{revision}/{filename}"
+    return {**spec, "source": source}
+
+install(mirror(specs["causalpfn"], "CausalIDView-CausalPFN",
+               "174895d810c10e3b475b230ba78e97018248ddca", "causalpfn_v0.pt"))
+for model in ("causalfm_standard", "causalfm_fd", "causalfm_iv_binary"):
+    spec = specs[model]
+    filename = "/".join(Path(spec["path"]).parts[-2:])
+    install(mirror(spec, "CausalIDView-CausalFM",
+                   "91608eccc4e9967df5558af7542a559f7510e269", filename))
+install(mirror(specs["tabpfn_v35"], "CausalIDView-TabPFN-v3.5",
+               "13390abe04c061f6e0d654c013af418fceee0860", "tabpfn-v3.5-20260909.safetensors"))
+
+if os.getenv("CAUSALIDVIEW_PRIVATE_MIRRORS") == "1":
+    from baselines.partial_identification.assets import CSA_PFN_SPEC
+
+    dopfn = specs["dopfn"]
+    prepare_dopfn_source(dopfn)
+    spec = mirror(dopfn, "CausalIDView-Do-PFN",
+                  "c14626fdac5a02c80e67c29e23289f7b2f0bdc7f", Path(dopfn["path"]).name)
+    prepare_runtime_files(spec)
+    install({k: v for k, v in spec.items() if k not in {"runtime_files", "source_manifest"}})
+    install(mirror(CSA_PFN_SPEC, "CausalIDView-CSA-PFN-MSM",
+                   "8d7dbbdf9948b6724228d7ec6fe25faa5bbbd3e4", "model.pt"))
+PY
+python scripts/fig2/prepare_fig2.py --only dopfn
+python scripts/fig2/run_fig2.py --validate-checkpoints
+```
+
+**If a lab mirror download fails, run the upstream setup script.** It downloads missing files from the original GitHub or Hugging Face release and reuses any files that already pass verification.
 
 ```bash
 python scripts/fig2/prepare_fig2.py
 python scripts/fig2/run_fig2.py --validate-checkpoints
 ```
 
-Setup verifies all six checkpoint files and both Do-PFN runtime pickles by SHA-256. CausalPFN and CausalFM source snapshots and licenses are included in the repository. [Checkpoint configuration](configs/fig2.yaml)
+Both routes install the weights under `Baselines/` and check them against the same upstream SHA-256 values. The final command verifies all six Figure 2 checkpoint files and both Do-PFN runtime pickles. If the CSA-PFN lab mirror is unavailable, the [Figure 6(c) setup script](#partial-identification-predictions) downloads it from its original release. [Checkpoint configuration](configs/fig2.yaml)
 
 | Do-PFN asset | Official revision | Verification |
 | --- | --- | --- |
@@ -276,7 +321,7 @@ The bound runner reads the 40 frozen observed worlds under `data/fig6/bound_worl
 .venv-classical/bin/python scripts/fig6/predict_fig6_bounds.py --model xgboost
 ```
 
-Set up the remaining four methods with the TabPFN 9.0.0 runtime. The setup commands install the shared v3.5 checkpoint, the public CSA-PFN checkpoint, and a pinned NeuralCSA checkout with the experiment's device compatibility patch. They place these assets under `Baselines/`. The B-Learner source and license are included.
+Set up the remaining four methods with the TabPFN 9.0.0 runtime. The commands reuse checkpoints installed in [checkpoint setup](#2-download-and-verify-the-checkpoints) and download CSA-PFN from upstream if it has yet to be installed. The setup also installs a pinned NeuralCSA checkout and applies the experiment's device compatibility patch. The B-Learner source and license are included.
 
 ```bash
 python3.10 -m venv .venv-fig6-bounds
