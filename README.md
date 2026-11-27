@@ -1,19 +1,50 @@
 # CausalIDView
 
-Experiment code and reproduction assets for **CausalIDView**.
+Official benchmark and reproduction code for **What You Observe Determines How You Identify Causal Effects: Evaluating Causal Models across Observational Views**.
 
-[Paper (v1)](https://arxiv.org/abs/2609.36881v1) · [Code](https://github.com/MLAI-Yonsei/CausalIDView)
+**Authors** · Heejin Jung, Gyeongdeok Seo, Hoyoon Byun, Joseph Lee, and Kyungwoo Song
 
-[Overview](#overview) · [Installation & usage](#installation--usage) · [Main results](#main-results) · [Code layout](#code-layout) · [Citation](#citation)
+[📄 Paper](https://arxiv.org/abs/2609.36881v1) · [🖼️ Framework figure (PDF)](https://arxiv.org/pdf/2609.36881v1#page=2) · [📊 Reference results](results/)
+
+![Python 3.10](https://img.shields.io/badge/Python-3.10-blue)
+
+[🔍 Overview](#overview) · [🔬 Benchmark design](#benchmark-design) · [🚀 Installation & usage](#installation--usage) · [📊 Main results](#main-results) · [📁 Code layout](#code-layout) · [📚 Citation](#citation)
 
 ## Overview
 
-CausalIDView evaluates conditional average treatment effect (CATE) estimators across identification views, outcome changes, hidden confounding, and randomized trials.
+**Compare causal effect estimators as the available identifying information changes.**
 
-- **Verify the bundled results on CPU.** Start with the [analysis environment](#analysis-environment) and [archive commands](#verify-the-bundled-results-on-cpu).
-- **Run the experiments from inputs.** Follow [model setup](#model-setup) and the commands for the experiment you want to rerun. Check [Main results](#main-results) for reference files and how to interpret differences in a fresh run.
+CausalIDView derives multiple observational views from each structural causal model (SCM) realization. The query units and target conditional average treatment effect (CATE) stay fixed across views.
+
+<p align="center">
+  <a href="https://arxiv.org/pdf/2609.36881v1#page=2">
+    <img src="https://arxiv.org/html/2609.36881v1/Framework_v3.png" alt="CausalIDView framework. A shared structural causal model yields back-door, front-door, instrumental-variable, and proximal views. Estimators receive one view at a time and are evaluated against the same target CATE." width="100%">
+  </a>
+</p>
+<p align="center">
+  <em>Figure 1 from the paper. Matched observational views share the same causal world and target CATE.</em> · <a href="https://arxiv.org/pdf/2609.36881v1#page=2">Open in PDF</a>
+</p>
+
+## Benchmark design
+
+1. **Generate matched views.** Reveal the variables required for back-door, front-door, instrumental-variable, or proximal identification in the same realized world.
+2. **Estimate treatment effects.** Compare causal foundation models, modular TabPFN-based estimators, and other causal estimators on the resulting observational data.
+3. **Evaluate estimates and stress tests.** Score against the shared CATE in the synthetic benchmark, then examine responses to structural changes, hidden confounding, and null effects in randomized trials.
+
+| Experiment | What it measures |
+| --- | --- |
+| [Figure 2](#figure-2) | CATE accuracy across four identification views |
+| [Figure 3](#figure-3) | Estimate stability when CATE stays fixed and tracking when it changes |
+| [Figure 6](#figure-6) | Point and interval estimation under hidden confounding |
+| [Table 2](#table-2) | Estimated effects on pre-treatment outcomes from randomized trials |
 
 ## Installation & usage
+
+| Start here | What you need |
+| --- | --- |
+| [Verify the bundled results on CPU](#verify-the-bundled-results-on-cpu) | The analysis environment and the files in this repository |
+| [Run one synthetic world on CPU](#one-world-check) | The analysis environment and the classical runtime |
+| [Run the full experiments](#model-setup) | The relevant model runtimes and checkpoints, a CUDA-capable GPU, and raw data and R for Table 2 |
 
 ### Analysis environment
 
@@ -337,6 +368,18 @@ Use `--archived` to rebuild the full table from the bundled scores. Local CFRNet
 
 ## Main results
 
+The commands above generate these files under `artifacts/`. The archive commands use separate directories.
+
+| Experiment | Fresh output directory | Figures and numerical summaries |
+| --- | --- | --- |
+| Figure 2 | `fig2_fresh/` | `fig2.pdf`, `fig2.csv` |
+| Figure 3 | `fig3_fresh/` | `fig3.pdf`, `fig3.csv` |
+| Figure 6 (all panels) | `fig6_fresh/` | `fig6.pdf`, `point_summary.csv`, `panel_c.csv` |
+| Table 2 | `table2/fresh/` | `table2.pdf`, `table2.csv` |
+
+<details>
+<summary><strong>Reference files, comparison reports, and tolerances</strong></summary>
+
 Compare fresh outputs against the bundled v2 references. A verifier can write a comparison CSV and then exit with an error because the results differ. If the report exists, use it to distinguish a numerical mismatch from missing inputs or an incomplete run.
 
 | Experiment | Bundled v2 reference | Fresh comparison under `artifacts/` | How the fresh verifier handles differences |
@@ -345,6 +388,8 @@ Compare fresh outputs against the bundled v2 references. A verifier can write a 
 | [Figure 3](#figure-3) | [Figure 3 CSVs](results/fig3/) | `fig3_fresh/fig3_comparison.csv` | Fails when comparisons exceed the default absolute and relative tolerances of `1e-10`. The full fresh GPU run remains unverified against this reference. |
 | [Figure 6](#figure-6) | [Figure 6 CSVs](results/fig6/) | `fig6a_fresh/comparison.csv`, `fig6b_fresh/comparison.csv`, `fig6c_fresh/comparison.csv` | Panel verifiers report numerical differences by default. Pass `--atol` to require agreement. |
 | [Table 2](#table-2) | [table2.csv](results/table2/table2.csv) | `table2/fresh/table2_comparison.csv` | Fails on mismatches and reports both full-precision and four-decimal comparisons. Fresh CFRNet scores can differ from the archive. |
+
+</details>
 
 <details>
 <summary><strong>Figure 2 verification details</strong></summary>
